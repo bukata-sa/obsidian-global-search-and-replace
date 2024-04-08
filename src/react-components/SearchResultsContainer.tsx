@@ -63,12 +63,14 @@ function SearchResultsContainer({
 			onScrollThresholdExceeded();
 		}
 	}
-
-	return (
-		<div onScroll={handleScroll} className="prompt-results">
-			{resultsMarkup}
-		</div>
-	);
+	if (resultsMarkup.length > 0) {
+		return (
+			<div onScroll={handleScroll} className="prompt-results">
+				{resultsMarkup}
+			</div>
+		);
+	}
+	return null
 }
 
 export default React.memo(SearchResultsContainer);

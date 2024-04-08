@@ -43,8 +43,8 @@ export class FileOperator {
 		let numberOfFilesWithMatches = 0;
 
 		for (const file of markdownFiles) {
-			const contents = await this.app.vault.read(file);
-			const lines = this.splitIntoLines(contents);
+			const content = await this.app.vault.read(file);
+			const lines = this.splitIntoLines(content);
 			let foundAMatchInCurrentFile = false;
 
 			lines.forEach((line, i) => {
@@ -61,6 +61,8 @@ export class FileOperator {
 
 				searchResults.push(...intermediateResults);
 			});
+
+			// this.searchInContent(content, file, queryRegex)
 
 			if (foundAMatchInCurrentFile) {
 				numberOfFilesWithMatches++;
@@ -105,6 +107,18 @@ export class FileOperator {
 				file
 			);
 		});
+	}
+
+	private searchInContent(
+		content: string,
+		file: TFile,
+		queryRegex: RegExp
+	) : SearchResult[] {
+		const matches = content.matchAll(queryRegex);
+		if ([...matches].length > 0) {
+			console.log(1);
+		}
+		return []
 	}
 
 	private splitIntoLines(contents: string) {

@@ -8,16 +8,17 @@ import { SearchResult } from "../domain/search-result";
 import { findLastIndex } from "../util/utils";
 import { ResultsNumberSummary } from "./ResultsNumberSummary";
 import { FileOperator, ReplaceOperationResult } from "../domain/file-operator";
-import { useReplaceSelection } from "./use-replace-selection";
+import { useActOnSelection } from "./use-replace-selection";
 import { useScrollSelectedSearchResultIntoView } from "./use-scroll-selected-search-result-into-view";
-import { useOpenSelectionInEditor } from "./use-open-selection-in-editor";
 import { useBindObsidianEventHandlers } from "./use-bind-obsidian-event-handlers";
 import { useSearch } from "./use-search";
+import { SearchAndReplaceMode } from "src/obsidian-components/search-and-replace-modal";
 
 const NUMBER_OF_RESULTS_TO_DISPLAY_PER_BATCH = 20;
 
 interface SearchAndReplaceProps {
 	fileOperator: FileOperator;
+	mode: SearchAndReplaceMode;
 }
 
 export interface SearchAndReplaceState {
@@ -27,6 +28,7 @@ export interface SearchAndReplaceState {
 	numberOfResultsToDisplay: number;
 	regexEnabled: boolean;
 	caseSensitivityEnabled: boolean;
+	mode: SearchAndReplaceMode;
 	searchResults: SearchResult[];
 	numberOfFilesWithMatches: number;
 }
@@ -37,6 +39,7 @@ export type SearchAndReplaceAction =
 	| { type: "move_selection_down" }
 	| { type: "update_replacement_text"; nextReplacementText: string }
 	| { type: "update_search_query"; nextSearchQuery: string }
+	| { type: "toggle_search_mode"; nextMode: SearchAndReplaceMode }
 	| { type: "update_selected_index"; nextSelectedIndex: number }
 	| { type: "toggle_regex_enabled" }
 	| { type: "toggle_case_sensitivity_enabled" }
@@ -106,6 +109,9 @@ function reducer(
 			const { nextSearchQuery } = action;
 			return { ...state, searchQuery: nextSearchQuery };
 		}
+		case "toggle_search_mode":
+			const { nextMode } = action;
+			return { ...state, mode: nextMode };
 		case "replace": {
 			const { replaceOperationResult } = action;
 			const { searchResults, selectedIndex } = state;
@@ -151,7 +157,7 @@ function reducer(
 	}
 }
 
-export default function SearchAndReplace({ fileOperator }: SearchAndReplaceProps) {
+export default function SearchAndReplace({ fileOperator, mode }: SearchAndReplaceProps) {
 	const [state, dispatch] = useReducer(reducer, {
 		searchQuery: "",
 		replacementText: "",
@@ -159,6 +165,7 @@ export default function SearchAndReplace({ fileOperator }: SearchAndReplaceProps
 		numberOfResultsToDisplay: NUMBER_OF_RESULTS_TO_DISPLAY_PER_BATCH,
 		regexEnabled: false,
 		caseSensitivityEnabled: false,
+		mode: mode,
 		searchResults: [],
 		numberOfFilesWithMatches: 0,
 	});
@@ -167,15 +174,14 @@ export default function SearchAndReplace({ fileOperator }: SearchAndReplaceProps
 	useSearch(state, dispatch, fileOperator);
 	useScrollSelectedSearchResultIntoView(state.selectedIndex);
 
-	const replaceSelection = useReplaceSelection(state, dispatch, fileOperator);
-	const openSelectionInEditor = useOpenSelectionInEditor(fileOperator, state);
-	useBindObsidianEventHandlers(dispatch, replaceSelection, openSelectionInEditor);
+	const replaceSelection = useActOnSelection(state, dispatch, fileOperator);
+	useBindObsidianEventHandlers(dispatch, replaceSelection);
 
-	const handleReplaceInputChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleReplaceInputChanged = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		dispatch({ type: "update_replacement_text", nextReplacementText: event.target.value });
 	}, []);
 
-	const handleSearchInputChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleSearchInputChanged = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		dispatch({ type: "update_search_query", nextSearchQuery: event.target.value });
 	}, []);
 
@@ -188,12 +194,10 @@ export default function SearchAndReplace({ fileOperator }: SearchAndReplaceProps
 	}, []);
 
 	const handleToggleRegexSearch = useCallback(() => {
-		dispatch({ type: "clear" });
 		dispatch({ type: "toggle_regex_enabled" });
 	}, []);
 
 	const handleToggleCaseSensitiveSearch = useCallback(() => {
-		dispatch({ type: "clear" });
 		dispatch({ type: "toggle_case_sensitivity_enabled" });
 	}, []);
 
@@ -207,7 +211,8 @@ export default function SearchAndReplace({ fileOperator }: SearchAndReplaceProps
 				caseSensitivityEnabled={state.caseSensitivityEnabled}
 				onToggleCaseSensitiveSearch={handleToggleCaseSensitiveSearch}
 			/>
-			<ReplaceInput value={state.replacementText} onChange={handleReplaceInputChanged} />
+			{ mode == SearchAndReplaceMode.SEARCH_REPLACE
+				? <ReplaceInput value={state.replacementText} onChange={handleReplaceInputChanged} /> : "" }
 			<SearchResultsContainer
 				searchResults={state.searchResults}
 				selectedIndex={state.selectedIndex}

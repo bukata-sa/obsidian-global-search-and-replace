@@ -13,14 +13,9 @@ export function EnableCaseSensitivityButton({
 		<div
 			className="workspace-tab-header"
 			aria-label="Enable case-sensitive search"
-			aria-label-delay="50"
 		>
 			<div
-				className={`workspace-tab-header-inner snr-workspace-tab-header-inner ${
-					caseSensitivityEnabled
-						? "snr-workspace-tab-header-inner-icon-active"
-						: ""
-				}`}
+				className={`workspace-tab-header-inner snr-workspace-tab-header-inner clickable-icon ${caseSensitivityEnabled ? "is-active" : ""}`}
 				onClick={onToggleCaseSensitiveSearch}
 			>
 				<div className="workspace-tab-header-inner-icon">

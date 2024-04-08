@@ -7,7 +7,7 @@ import {
 
 interface SearchInputProps extends EnableRegexButtonProps, EnableCaseSensitivityButtonProps {
 	value: string;
-	onChange: React.ChangeEventHandler<HTMLInputElement>;
+	onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 }
 
 export default function SearchInput({
@@ -20,10 +20,8 @@ export default function SearchInput({
 }: SearchInputProps) {
 	return (
 		<div className="snr-input-icon-wrapper">
-			<input
-				className="prompt-input"
-				enterKeyHint="go"
-				type="text"
+			<textarea
+				className="snr-prompt-input"
 				placeholder="Search"
 				autoFocus
 				value={value}

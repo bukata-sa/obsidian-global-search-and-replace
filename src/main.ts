@@ -1,6 +1,6 @@
 import { App, Plugin, PluginManifest } from "obsidian";
 import { PluginSettings } from "./settings/plugin-settings";
-import { SearchAndReplaceModal } from "./obsidian-components/search-and-replace-modal";
+import { SearchAndReplaceModal, SearchAndReplaceMode } from "./obsidian-components/search-and-replace-modal";
 import { FileOperator } from "./domain/file-operator";
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -26,12 +26,20 @@ export default class SearchAndReplacePlugin extends Plugin {
 
 	private addPluginCommand(): void {
 		this.addCommand({
-			id: "search-and-replace",
-			name: "Search and Replace in all files",
+			id: "search",
+			name: "Search in all files",
 			callback: () => {
-				new SearchAndReplaceModal(this.app, this.fileOperator).open();
+				new SearchAndReplaceModal(this.app, this.fileOperator, SearchAndReplaceMode.SEARCH).open();
 			},
 		});
+		this.addCommand({
+			id: "search_replace",
+			name: "Search and replace in all files",
+			callback: () => {
+				new SearchAndReplaceModal(this.app, this.fileOperator, SearchAndReplaceMode.SEARCH_REPLACE).open();
+			},
+		});
+		
 	}
 
 	onunload() {

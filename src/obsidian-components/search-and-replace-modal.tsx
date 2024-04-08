@@ -5,16 +5,23 @@ import SearchAndReplace from "../react-components/SearchAndReplace";
 import eventBridge from "../infrastructure/event-bridge";
 import {FileOperator} from "../domain/file-operator";
 
+export enum SearchAndReplaceMode {
+	SEARCH,
+	SEARCH_REPLACE
+}
+
 export class SearchAndReplaceModal extends Modal {
 	private readonly reactRoot: Root;
 	private readonly fileOperator: FileOperator;
+	private mode: SearchAndReplaceMode;
 
-	constructor(app: App, fileOperator: FileOperator) {
+	constructor(app: App, fileOperator: FileOperator, mode: SearchAndReplaceMode) {
 		super(app);
 		this.prepareModalEl();
 		this.reactRoot = createRoot(this.modalEl);
 		this.registerEventListeners();
 		this.fileOperator = fileOperator;
+		this.mode = mode;
 	}
 
 	private prepareModalEl() {
@@ -36,31 +43,18 @@ export class SearchAndReplaceModal extends Modal {
 			eventBridge.onArrowDown?.(e, ctx);
 		});
 
-		// Replace note at selectedIndex
+		// Replace or Open note at selectedIndex
 		this.scope.register([], "Enter", (e, ctx) => {
 			e.preventDefault();
-
 			// Prevent press and hold
 			if (e.repeat) return;
-
 			eventBridge.onEnter?.(e, ctx);
-		});
-
-		// Open note at selectedIndex
-		this.scope.register(["Mod"], "Enter", (e, ctx) => {
-			e.preventDefault();
-
-			// Prevent press and hold
-			if (e.repeat) return;
-
-			eventBridge.onCommandEnter?.(e, ctx);
-			this.close();
 		});
 	}
 
 	onOpen() {
 		this.reactRoot.render(
-			<SearchAndReplace fileOperator={this.fileOperator}/>
+			<SearchAndReplace fileOperator={this.fileOperator} mode={this.mode}/>
 		);
 	}
 

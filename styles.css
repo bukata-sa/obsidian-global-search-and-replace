@@ -50,9 +50,9 @@
 	border-bottom: 1px solid var(--background-secondary);
 }
 
-.snr-regex-button {
-	margin-right: var(--size-4-4);
-}
+/* .snr-regex-button { */
+	/* margin-right: var(--size-4-4); */
+/* } */
 
 .snr-workspace-tab-header-inner {
 	padding: var(--size-4-2);
@@ -71,4 +71,18 @@
 	display: flex;
 	text-align: center;
 	justify-content: center;
+}
+
+textarea.snr-prompt-input {
+    width: 100%;
+    padding: var(--size-4-6);
+    background-color: var(--background-primary);
+    font-size: var(--font-ui-medium);
+    height: var(--prompt-input-height);
+    border-radius: 0;
+    border-bottom: 1px solid var(--background-secondary);
+    border: none;
+	outline: none;
+	resize: none;
+	box-shadow: none;
 }

@@ -13,11 +13,10 @@ export function EnableRegexButton({
 		<div
 			className="workspace-tab-header"
 			aria-label="Enable regex search"
-			aria-label-delay="50"
 		>
 			<div
-				className={`workspace-tab-header-inner snr-workspace-tab-header-inner snr-regex-button ${
-					regexEnabled ? "snr-workspace-tab-header-inner-icon-active" : ""
+				className={`workspace-tab-header-inner snr-workspace-tab-header-inner snr-regex-button clickable-icon ${
+					regexEnabled ? "is-active" : ""
 				}`}
 				onClick={onToggleRegexSearch}
 			>
