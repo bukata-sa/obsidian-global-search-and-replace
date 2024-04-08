@@ -1,7 +1,7 @@
 {
 	"id": "search-kit",
 	"name": "Search Kit",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"minAppVersion": "1.1.1",
 	"description": "Search and replace in all vault files",
 	"author": "Mahmoud Fawzy Khalil",
