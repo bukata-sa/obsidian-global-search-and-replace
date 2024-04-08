@@ -37,7 +37,7 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: "main.js",
+	outfile: "/Users/abukata/Library/Mobile Documents/iCloud~md~obsidian/Documents/Dive/.obsidian/plugins/search-kit/main.js",
 });
 
 if (prod) {

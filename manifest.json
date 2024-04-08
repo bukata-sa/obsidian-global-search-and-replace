@@ -1,6 +1,6 @@
 {
-	"id": "global-search-and-replace",
-	"name": "Global Search and Replace",
+	"id": "search-kit",
+	"name": "Search Kit",
 	"version": "0.3.0",
 	"minAppVersion": "1.1.1",
 	"description": "Search and replace in all vault files",
