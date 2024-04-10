@@ -27,6 +27,7 @@ export function useActOnSelection(
 	}, [
 		dispatch,
 		fileOperator,
+		state.mode,
 		state.caseSensitivityEnabled,
 		state.regexEnabled,
 		state.replacementText,

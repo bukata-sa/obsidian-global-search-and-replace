@@ -1,4 +1,4 @@
-import {App, Modal} from "obsidian";
+import {App, Modal, Scope} from "obsidian";
 import {createRoot, Root} from "react-dom/client";
 import * as React from "react";
 import SearchAndReplace from "../react-components/SearchAndReplace";
@@ -21,6 +21,7 @@ export class SearchAndReplaceModal extends Modal {
 		this.reactRoot = createRoot(this.modalEl);
 		this.registerEventListeners();
 		this.fileOperator = fileOperator;
+		this.scope = new Scope(app.scope);
 		this.mode = mode;
 	}
 
@@ -50,6 +51,10 @@ export class SearchAndReplaceModal extends Modal {
 			if (e.repeat) return;
 			eventBridge.onEnter?.(e, ctx);
 		});
+	}
+
+	setMode(mode: SearchAndReplaceMode) {
+		this.mode = mode;	
 	}
 
 	onOpen() {

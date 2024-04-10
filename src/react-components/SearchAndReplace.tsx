@@ -13,6 +13,7 @@ import { useScrollSelectedSearchResultIntoView } from "./use-scroll-selected-sea
 import { useBindObsidianEventHandlers } from "./use-bind-obsidian-event-handlers";
 import { useSearch } from "./use-search";
 import { SearchAndReplaceMode } from "src/obsidian-components/search-and-replace-modal";
+import { useUpdateMode } from "./use-update-mode";
 
 const NUMBER_OF_RESULTS_TO_DISPLAY_PER_BATCH = 20;
 
@@ -34,12 +35,12 @@ export interface SearchAndReplaceState {
 }
 
 export type SearchAndReplaceAction =
+	| { type: "update_mode"; nextMode: SearchAndReplaceMode }
 	| { type: "clear" }
 	| { type: "move_selection_up" }
 	| { type: "move_selection_down" }
 	| { type: "update_replacement_text"; nextReplacementText: string }
 	| { type: "update_search_query"; nextSearchQuery: string }
-	| { type: "toggle_search_mode"; nextMode: SearchAndReplaceMode }
 	| { type: "update_selected_index"; nextSelectedIndex: number }
 	| { type: "toggle_regex_enabled" }
 	| { type: "toggle_case_sensitivity_enabled" }
@@ -55,6 +56,9 @@ function reducer(
 	action: SearchAndReplaceAction
 ): SearchAndReplaceState {
 	switch (action.type) {
+		case "update_mode":
+			const { nextMode } = action;
+			return { ...state, mode: nextMode };
 		case "clear": {
 			return {
 				...state,
@@ -109,9 +113,6 @@ function reducer(
 			const { nextSearchQuery } = action;
 			return { ...state, searchQuery: nextSearchQuery };
 		}
-		case "toggle_search_mode":
-			const { nextMode } = action;
-			return { ...state, mode: nextMode };
 		case "replace": {
 			const { replaceOperationResult } = action;
 			const { searchResults, selectedIndex } = state;
@@ -170,7 +171,7 @@ export default function SearchAndReplace({ fileOperator, mode }: SearchAndReplac
 		numberOfFilesWithMatches: 0,
 	});
 
-
+	useUpdateMode(state, dispatch)
 	useSearch(state, dispatch, fileOperator);
 	useScrollSelectedSearchResultIntoView(state.selectedIndex);
 
