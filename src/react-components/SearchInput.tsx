@@ -4,6 +4,7 @@ import {
 	EnableCaseSensitivityButton,
 	EnableCaseSensitivityButtonProps,
 } from "./EnableCaseSensitivityButton";
+import useAutosizeTextArea from "./use-textarea-resize";
 
 interface SearchInputProps extends EnableRegexButtonProps, EnableCaseSensitivityButtonProps {
 	value: string;
@@ -18,23 +19,28 @@ export default function SearchInput({
 	onToggleCaseSensitiveSearch,
 	caseSensitivityEnabled,
 }: SearchInputProps) {
+	const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+	useAutosizeTextArea(textAreaRef.current, value)
 	return (
 		<div className="snr-input-icon-wrapper">
 			<textarea
 				className="snr-prompt-input"
 				placeholder="Search"
 				autoFocus
+				ref={textAreaRef}
 				value={value}
 				onChange={onChange}
 			/>
-			<EnableCaseSensitivityButton
-				caseSensitivityEnabled={caseSensitivityEnabled}
-				onToggleCaseSensitiveSearch={onToggleCaseSensitiveSearch}
-			/>
-			<EnableRegexButton
-				regexEnabled={regexEnabled}
-				onToggleRegexSearch={onToggleRegexSearch}
-			/>
+			<div className="snr-controls">
+				<EnableCaseSensitivityButton
+					caseSensitivityEnabled={caseSensitivityEnabled}
+					onToggleCaseSensitiveSearch={onToggleCaseSensitiveSearch}
+				/>
+				<EnableRegexButton
+					regexEnabled={regexEnabled}
+					onToggleRegexSearch={onToggleRegexSearch}
+				/>
+			</div>
 		</div>
 	);
 }

@@ -74,15 +74,23 @@
 }
 
 textarea.snr-prompt-input {
-    width: 100%;
-    padding: var(--size-4-6);
+    width: 100%;   
+	margin: var(--size-4-4);
+    padding: 0px;
     background-color: var(--background-primary);
     font-size: var(--font-ui-medium);
-    height: var(--prompt-input-height);
+	max-height: 7em;
     border-radius: 0;
     border-bottom: 1px solid var(--background-secondary);
     border: none;
 	outline: none;
 	resize: none;
 	box-shadow: none;
+}
+
+.snr-controls {
+	display: flex;
+	position: absolute;
+	top: 4px;
+	right: 4px;
 }
